@@ -1,11 +1,13 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Authors: Ana Cristina Rocha Oliveira(*)
+% Authors: Gabriel Ferreira Silva (*)
+%          Ana Cristina Rocha Oliveira(*)
 %          Mauricio Ayala-Rincon(*)
+%          Daniele Nantes Sobrinho (*) 
 %          Maribel Fernandez(**)
 %          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
+% Last modified: 21 March 2019
 % This subtheory contains specifications and formalisations
 % of atoms.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -130,7 +132,7 @@ DS_member: LEMMA
    member(a, ds(pi1,pi2)) = member(a, DS(pi1,pi2))
 
 
-%%%%%%%%%%%%%%%%% Lemmas i needed to add
+%%%%%%%%%%%%%%%%% Extra lemma needed 
 act_reverse_aux1: CONJECTURE
    act((: :)) = act(append(pi, reverse(pi)))
    

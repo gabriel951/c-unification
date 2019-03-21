@@ -1,17 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Authors: Ana Cristina Rocha Oliveira(*)
+% Authors: Gabriel Ferreira Silva (*)
+%          Ana Cristina Rocha Oliveira(*)
 %          Mauricio Ayala-Rincon(*)
+%          Daniele Nantes Sobrinho (*) 
 %          Maribel Fernandez(**)
 %          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
-% This is the main subtheory of the theory Nominal Unification
-% Here, a functional specification of nominal unification is
+% Last modified: 21 March 2019
+% This is the main subtheory of the theory Nominal C-Unification
+% Here, a functional specification of nominal C-unification is
 % given and formalised its soundness and correcteness.
 % 
 %                >>>> This is the top theory <<<<
 %
-% Comments reference Definitions, Lemmas and Theorems from the accompaining report
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -28,10 +29,9 @@ BEGIN
 	a: VAR atom
 	
 %%%%%%%%%% preliminar definitions
-% TODO: see if i've used all this variables i've defined
 % A fix point equation type is a permutation and a variable 
 fix_pnt_eq_typ: TYPE = [perm, variable]
-fix_pnt_eq: VAR fix_pnt_eq_typ                  % I'll need a variable of type fix point equation
+fix_pnt_eq: VAR fix_pnt_eq_typ                 
 fix_pnt_eq_lst, fix_pnt_eq_lst1, fix_pnt_eq_lst2, fix_pnt_eq_lst_sol: VAR list[fix_pnt_eq_typ]
 
 % a unification problem type is a list containing the two terms to be unified
@@ -43,7 +43,6 @@ unif_prb_lst, unif_prb_lst1, unif_prb_lst2, unif_prb_lst_sol: VAR list[unif_prb_
 nominal_sol_typ:  TYPE = [fresh_context, Sub, list[fix_pnt_eq]]
 nominal_sol: VAR nominal_sol_typ
 
-% i'll need this
        	    IMPORTING structure_extra[nominal_sol_typ]
 	    
 % variables needed to specify algorithm
@@ -304,18 +303,9 @@ ELSE LET t = car(unif_prb_lst)`1, s = car(unif_prb_lst)`2
 	    ENDIF
 ENDIF
 MEASURE lex2(card(vars_lst(append(unif_prb_lst, fix_pnt2unif_prb(fix_pnt_eq_lst)))), size_lst(unif_prb_lst))
-% lex 2 -> TODO? (number of variables in all problems, sum of depth of terms) 
-% lex 3 should only be used if i also need to handle the number of commutative function symbols.
 %%%%%%%%%% end of algorithm to perform c unification 
 
 %%%%%%%%%%% auxiliar lemmas for soundness of the algorithm
-% TODO: I don't need this anymore.
-% the context returned by the algorithm is bigger than the context the algorithm started with 
-%ctxt_ret_big_init_ctxt: LEMMA
-%    FORALL Delta_sol, sigma_sol, fix_pnt_eq_lst_sol:
-%    member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), c_unify(Delta, sigma, unif_prb_lst, fix_pnt_eq_lst))
-%    => FORALL (aX:[atom, variable]): member(aX, Delta) => member(aX, Delta_sol) 
-
 % if Delta |- Nabla sigma, then Delta |- subset(Nabla) sigma
 fresh_subs_subset: LEMMA
     FORALL sigma, Delta, Nabla1, Nabla: 
@@ -375,13 +365,6 @@ c_unify_complete_cor: COROLLARY
     EXISTS Delta_sol, sigma_sol, fix_pnt_eq_lst_sol:
        member((Delta_sol, sigma_sol, fix_pnt_eq_lst_sol), c_unify((::), (::), (:(t, s):), (::)) )
        AND sol_prb_quad?(Nabla, sigma1)(Delta_sol, sigma_sol, (::), fix_pnt_eq_lst_sol)
-
-% old completeness of unify. This is not how i should specify
-%c_unify_complete: LEMMA
-%is_sol_prb_trp(Nabla, sigma1, (::), (::), (:(t, s):) ) =>
-%EXISTS (Delta:fresh_context), (sigma: Sub), (fix_pnt_eq_lst: list[fix_pnt_eq]| member((Delta, sigma, fix_pnt_eq_lst), c_unify((::), (::), (:(t, s):), (::)) )) :
-%LET unif_prb_lst = fix_pnt2unif_prb(fix_pnt_eq_lst) IN
-%is_sol_prb_trp(Nabla, sigma1, Delta, sigma, unif_prb_lst)
 %%%%%%%%%% end of specification of soundness and completeness of algorithm  
 
 

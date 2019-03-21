@@ -1,10 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Authors: Ana Cristina Rocha Oliveira(*)
+% Authors: Gabriel Ferreira Silva (*) 
+%          Ana Cristina Rocha Oliveira(*)
 %          Mauricio Ayala-Rincon(*)
+%          Daniele Nantes Sobrinho (*)
 %          Maribel Fernandez(**)
 %          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
+% Last modified: 21 March 2019
 % This subtheory contains specifications and formalisations
 % of nominal freshness.
 %
@@ -24,7 +26,6 @@ fresh_context: TYPE = list[[atom,variable]]
 
 % Delta derivates that a is fresh in t or
 % a is fresh in t under the context Delta.
-% Definition 3.1
 fresh(Delta)(a, t): RECURSIVE bool =
    CASES t OF
    	 at(b): a/=b,
@@ -34,14 +35,13 @@ fresh(Delta)(a, t): RECURSIVE bool =
 	 abs(b,bd): IF a=b THEN TRUE
 	 	       ELSE fresh(Delta)(a,bd)
 		    ENDIF,
-	 app(sl,ag): fresh(Delta)(a,ag),
-	 % TODO - added commutative function 
+	 app(sl,ag): fresh(Delta)(a,ag), 
 	 c_app(sl, ag): fresh(Delta)(a, ag)
    ENDCASES
    MEASURE t BY <<
 
 % Permutations (applied to atom and term) do not change freshness.
-ext_preserves_fresh: LEMMA % Lemma 3.2
+ext_preserves_fresh: LEMMA 
    fresh(Delta)(act(pi)(a), ext(pi)(t)) = fresh(Delta)(a, t)
 
 % If two permutations have the same action, then freshness is invariant 
@@ -56,7 +56,7 @@ ext_reverse_fresh: LEMMA
    fresh(Delta)(a,ext(pi)(t)) = fresh(Delta)(act(reverse(pi))(a), t)
 
 % Enlarging contexts preserves freshness.
-fresh_weakening: LEMMA % Lemma 3.3
+fresh_weakening: LEMMA
    (FORALL(ax:[atom,variable]): member(ax,Delta) => member(ax,Nabla))
     AND fresh(Delta)(a, t) => fresh(Nabla)(a, t)
 
@@ -98,7 +98,6 @@ fresh?(a, t): RECURSIVE [fresh_context, bool] =
 	 abs(b,bd): IF a = b THEN ((::), TRUE)
 	 	       ELSE fresh?(a, bd) ENDIF,
 	 app(f,ag): fresh?(a, ag),
-	 % TODO: commutative symbols
 	 c_app(f, ag): fresh?(a, ag)
    ENDCASES
    MEASURE t BY <<
@@ -106,7 +105,7 @@ fresh?(a, t): RECURSIVE [fresh_context, bool] =
    	   IMPORTING structure_extra[[atom,variable]]
 
 % Soundness of fresh?
-fresh?_is_fresh: LEMMA % Lemma 3.13
+fresh?_is_fresh: LEMMA 
    fresh?(a,t) = (Delta,TRUE) => fresh(Delta)(a,t)
 
 % Alternation of a permutation and its reverse to the atom and the term
@@ -119,11 +118,10 @@ not_fresh_is_null: LEMMA
    NOT fresh?(a, t)`2 IMPLIES fresh?(a,t)`1 = (::)
 
 % Completeness of fresh?
-fresh?_complete: LEMMA % Lemma 3.13
+fresh?_complete: LEMMA 
    LET (Nabla,b) = fresh?(a, t) IN
    fresh(Delta)(a, t) IMPLIES b AND
    (FORALL (b, X): member((b, X), Nabla) => member((b, X), Delta))
-
 
 
 END freshness

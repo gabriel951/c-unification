@@ -1,10 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Authors: Ana Cristina Rocha Oliveira(*)
+% Authors: Gabriel Ferreira Silva (*) 
+%          Ana Cristina Rocha Oliveira(*)
 %          Mauricio Ayala-Rincon(*)
+%          Daniele Nantes Sobrinho (*) 
 %          Maribel Fernandez(**)
 %          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
+% Last modified: 21 March 2019
 % This subtheory contains specifications and formalisations
 % of nominal substitution.
 %
@@ -25,7 +27,6 @@ BEGIN
 % Nuclear substitution:
 % The function subs exchanges the variable X by the term s inside the term t.
 % This is the action of a basic substitution in a term.
-% Definition 2.5
 subs(X,s)(t): RECURSIVE term =
    CASES t OF
    	 at(a): at(a),
@@ -41,7 +42,7 @@ subs(X,s)(t): RECURSIVE term =
    MEASURE t BY <<
 
 % The action of nuclear substitutions and permutations commutes.
-subs_perm_comm: LEMMA % BI Lemma 2.9
+subs_perm_comm: LEMMA 
    subs(X,s)(ext(pi)(t)) = ext(pi)(subs(X,s)(t))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,17 +55,15 @@ Sub: TYPE = list[[variable, term]]
 	Id: Sub = (::)
 % Action of substitutions over terms. Close to the notion of triangular
 % substitutions.
-% Definition 2.5
 Subs(sigma)(t): RECURSIVE term =
    CASES sigma OF
    	 null : t,
-	 % TODO: previously, it was subs(head)(Subs(tail)(t))
 	 cons(head,tail): subs(head)(Subs(tail)(t))
    ENDCASES
    MEASURE sigma BY <<
 
 % The action of substitutions and permutations commutes.
-Subs_perm_comm: LEMMA % Lemma 2.9
+Subs_perm_comm: LEMMA
    Subs(sigma)(ext(pi)(t)) = ext(pi)(Subs(sigma)(t))
 
 % Substitution does not change atoms.
@@ -260,7 +259,6 @@ Vars_in(u,s)(X,t): bool = subset?(Vars(t), Vars(s,u)) AND
 % A special type of substitution to guarantee termination of the
 % unification algorithm. The variables of Domain and Image are limited
 % and each nuclear substitution is idempotent.
-% Definition 4.5
 Subs_unif(u,s): TYPE = list[{sigma:[variable,term]| Vars_in(u,s)(sigma) AND  
 			     		      NOT occurs(sigma`1, sigma`2)}]
 
@@ -272,7 +270,7 @@ Subs_unif_Vars_subset: LEMMA
 
 % A substitution with the special type above makes the number of variables
 % decreases.
-Subs_unif_Vars_decrease: LEMMA % Proposition 4.6
+Subs_unif_Vars_decrease: LEMMA 
    FORALL(gamma: Subs_unif(u,s)): gamma /= Id IMPLIES
    card(Vars(Subs(gamma)(w), Subs(gamma)(t))) < card(union(Vars(u,s), Vars(w,t)))
 
@@ -325,7 +323,7 @@ alpha_Subs_ord: LEMMA
 % If two substitutions are alpha-equivalent, then the action of them
 % over a term produces alpha-equivalent terms.
 % If Delta|--sigma~gamma , then Delta|-- t.sigma~t.gamma   .
-alpha_Subs_invariance: LEMMA % Lemma 4.9
+alpha_Subs_invariance: LEMMA 
    (FORALL X: alpha(Delta)(Subs(sigma)((::)*X), Subs(gamma)((::)*X)) )
    IMPLIES alpha(Delta)(Subs(sigma)(t), Subs(gamma)(t))
 

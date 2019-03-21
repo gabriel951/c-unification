@@ -1,10 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Authors: Ana Cristina Rocha Oliveira(*)
+% Authors: Gabriel Ferreira Silva (*) 
+%          Ana Cristina Rocha Oliveira(*)
 %          Mauricio Ayala-Rincon(*)
+%          Daniele Nantes Sobrinho (*) 
 %          Maribel Fernandez(**)
 %          (*)Universidade de Brasilia, (**)King's College London
-% Last modified: 27 April 2015
+% Last modified: 21 March 2019
 % This subtheory contains specifications and formalisations
 % of nominal terms.
 %
@@ -14,9 +16,7 @@
 %%%%%%%%%%%%%%%%%%%%%% Nominal Terms %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Nominal terms grammar: atoms, suspended variables, unit, pairs,
-% abstractions and application, respectively.
-% Definition 2.2
-% TODO: commutative functions. Do commutative symbols need to be nonempty?
+% abstractions, applications, and commutative applications respectively.
 term[atom : TYPE+, perm : TYPE+, variable : TYPE+, symbol : TYPE+, commutative_symbol: TYPE+ ]: DATATYPE WITH SUBTYPES plain, pair
 	  BEGIN
 	      at (a: atom): atom?: plain
@@ -59,7 +59,6 @@ IMPORTING atoms,
 	  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Homomorphic extension of action of permutations over terms
-% Definition 2.4
 ext(pi)(t): RECURSIVE term =
    CASES t OF
          at(a): at(act(pi)(a)),
@@ -68,7 +67,6 @@ ext(pi)(t): RECURSIVE term =
    	 pair(t1,t2): pair(ext(pi)(t1),ext(pi)(t2)),
    	 abs(ab, bd): abs(act(pi)(ab), ext(pi)(bd)),
    	 app(sl, ag): app(sl, ext(pi)(ag)),
-	 % see manual p. 22
 	 c_app(sl, ag): c_app(sl, pair(ext(pi)(term1(ag)), ext(pi)(term2(ag))))	
   ENDCASES
 MEASURE t BY <<
@@ -90,7 +88,6 @@ ext_preserves_type: LEMMA
    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Depth of terms.
-% Definition 2.3
 depth(t): RECURSIVE nat =
    CASES t OF
    	 at(a): 0,
@@ -148,7 +145,6 @@ ext_preserves_occurs: LEMMA
    occurs(X,ext(pi)(t)) = occurs(X,t)
 
 % "Vars" computes the set of variables in a term.
-% Definition 2.8
 Vars(t): RECURSIVE finite_set[variable] =
    CASES t OF
    	 at(a): emptyset,
