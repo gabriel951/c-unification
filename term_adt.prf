@@ -1,0 +1,6 @@
+(|term_adt|)
+(|term_adt_map|)
+(|term_adt_reduce|
+ (|atom_TCC1| 0
+  (|atom_TCC1-1| NIL 3745910722 ("" (POSTPONE) NIL NIL) NIL SHOSTAK)))
+
