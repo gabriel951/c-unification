@@ -20,7 +20,7 @@ The theory Nominal Unification consists of eight pvs files.
   (available at http://shemesh.larc.nasa.gov/fm/ftp/larc/PVS-library). 
   Running PVS opens an Emacs window. 
 
-  Uncompress and copy the nominal unification directory somewhere in your 
+  Uncompress and copy the nominal c-unification directory somewhere in your 
   system. Then run PVS using as context library (change context) that 
   directory.  
 
@@ -28,7 +28,7 @@ The theory Nominal Unification consists of eight pvs files.
   you want to check and use the PVS meta commands x-step-proof (step by
   step) or x-prove.
  
-The contents of the nominal unification library are described below.
+The contents of the nominal c-unification library are described below.
 
 atoms.pvs with the implementation of atoms as natural numbers, permutations 
           and the difference set (ds).
