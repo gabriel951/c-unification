@@ -128,7 +128,7 @@ def run_second_ex_paper():
     print(" and ", end = '')
     print(gapp_s)
     print("\n")
-    sol = unify([], [], [(gapp_s, gapp_s)], [], True, '')
+    sol = unify([], [], [(gapp_t, gapp_s)], [], True, '')
     print("Finished.")
 
 # preliminar test 

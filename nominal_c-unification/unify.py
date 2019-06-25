@@ -265,7 +265,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                 return unify(Delta2, sigma2, PrbLst2, [], verb, indent_lvl) 
             else:
                 if verb: 
-                    print(indent_lvl + "No solution") 
+                    print(indent_lvl + "No solution\n") 
                 return []
 
         else: 
@@ -274,7 +274,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     return unify(Delta, sigma, PrbLst1, FPEqLst, verb, indent_lvl)
                 else: 
                     if verb: 
-                        print(indent_lvl + "No solution")
+                        print(indent_lvl + "No solution\n")
                     return []
 
             elif isinstance(t, Suspended_variable):  
@@ -289,7 +289,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                         return unify(Delta2, sigma2, PrbLst2, [], verb, indent_lvl) 
                     else: 
                         if verb: 
-                            print(indent_lvl + "No solution") 
+                            print(indent_lvl + "No solution\n") 
                         return []
 
                 elif isinstance(s, Suspended_variable) and s.var == t.var:
@@ -298,7 +298,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     return unify(Delta, sigma, PrbLst1, FPEqLst1, verb, indent_lvl)
                 else: 
                     if verb: 
-                        print(indent_lvl + "No solution")
+                        print(indent_lvl + "No solution\n")
                     return []
 
             elif isinstance(t, Unit):
@@ -306,7 +306,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     return unify(Delta, sigma, PrbLst1, FPEqLst, verb, indent_lvl)
                 else: 
                     if verb: 
-                        print(indent_lvl + "No solution")
+                        print(indent_lvl + "No solution\n")
                     return []
              
             elif isinstance(t, Pair): 
@@ -315,7 +315,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     return unify(Delta, sigma, PrbLst2, FPEqLst, verb, indent_lvl)
                 else: 
                     if verb: 
-                        print(indent_lvl + "No solution")
+                        print(indent_lvl + "No solution\n")
                     return []
 
             elif isinstance(t, Abstraction): 
@@ -332,17 +332,17 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                                 indent_lvl)
                     else: 
                         if verb: 
-                            print(indent_lvl + "No solution") 
+                            print(indent_lvl + "No solution\n") 
                         return [] 
                 else: 
                     if verb: 
-                        print(indent_lvl + "No solution") 
+                        print(indent_lvl + "No solution\n") 
                     return []
 
             elif isinstance(t, Application): 
                 if (not isinstance(s, Application)) or (t.symbol != s.symbol): 
                     if verb: 
-                        print(indent_lvl + "No solution") 
+                        print(indent_lvl + "No solution\n") 
                     return [] 
                 else: 
                     PrbLst2 = [(t.arg, s.arg)] + PrbLst1
@@ -351,7 +351,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
             elif isinstance(t, CApplication): 
                 if (not isinstance(s, CApplication)) or (t.symbol != s.symbol): 
                     if verb: 
-                        print(indent_lvl + "No solution") 
+                        print(indent_lvl + "No solution\n") 
                     return [] 
                 else: 
                     new_indent_lvl = indent_lvl + "   "
