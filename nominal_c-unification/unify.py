@@ -62,7 +62,6 @@ class CApplication:
     def __str__(self): 
         return self.symbol + "(" + (self.arg).__str__() + ")" 
         
-# end of the nominal term
 
 # check if var X is in t 
 def is_var_in_term(X, t): 
@@ -173,7 +172,7 @@ def is_fresh_subs(sigma, Nabla):
         return ([], True)
     else: 
         (a, X) = (Nabla[0][0], Nabla[0][1]) 
-        (Delta1, bool1) = is_fresh(a, apply_sub(sigma, X))     
+        (Delta1, bool1) = is_fresh(a, apply_sub_term(sigma, Suspended_variable([], X)))     
         (Delta2, bool2) = is_fresh_subs(sigma, Nabla[1:])
         if bool1 and bool2: 
             return (Delta1 + Delta2, True)
@@ -224,7 +223,6 @@ def apply_sub(sigma, PrbLst):
         t_sigma = apply_sub_term(sigma, t) 
         s_sigma = apply_sub_term(sigma, s) 
         return [(t_sigma, s_sigma)] + apply_sub(sigma, PrbLst[1:])
-
 
 
 # transforma a list of fixpoint equations into a list of unification problems
@@ -322,8 +320,8 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                 if isinstance(s, Abstraction) and (t.atom).name == (s.atom).name:  
                     PrbLst2 = [(t.body, s.body)] + PrbLst1
                     return unify(Delta, sigma, PrbLst2, FPEqLst, verb, indent_lvl)
-                elif is_abs(s) and (t.atom).name != (s.atom).name: 
-                    (Delta1, bool1) = is_fresh(a, s.body)
+                elif isinstance(s, Abstraction) and (t.atom).name != (s.atom).name: 
+                    (Delta1, bool1) = is_fresh((t.atom).name, s.body)
                     Delta2 = Delta1 + Delta 
                     PrbLst2 = [(t.body, apply_perm([((t.atom).name, \
                                 (s.atom).name)], s.body))] + PrbLst1
@@ -374,7 +372,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
 def print_context(Delta): 
     print("[", end = '')
     for fresh_constraint in Delta: 
-        print(fresh_constraint[0] + "#" + print(fresh_constraint[1]) + " ", end = '')
+        print(fresh_constraint[0] + "#" + fresh_constraint[1] + " ", end = '')
     print("]", end = '') 
 
 # print a substitution
