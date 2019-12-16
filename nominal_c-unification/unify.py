@@ -1,6 +1,10 @@
 # unification implementation of the algorithm 
 # We tried to make it closer with the pseudocode in the article
 
+# code only because lab does not have python3 
+from __future__ import print_function
+
+import copy
 
 class Atom: 
     def __init__(self, name): 
@@ -62,7 +66,6 @@ class CApplication:
     def __str__(self): 
         return self.symbol + "(" + (self.arg).__str__() + ")" 
         
-
 # check if var X is in t 
 def is_var_in_term(X, t): 
     if isinstance(t, Atom):
@@ -79,7 +82,6 @@ def is_var_in_term(X, t):
         return is_var_in_term(X, t.arg)
     elif isinstance(t, CApplication): 
         return is_var_in_term(X, t.arg) 
-
 
 # apply a permutation to an atom name. The permutation is represented as a swap list
 def apply_perm_atom(swap_lst, atom_name): 
@@ -109,7 +111,7 @@ def apply_perm(swap_lst, t):
         new_t_perm = swap_lst + t.perm
         new_t_var = t.var
         new_t = Suspended_variable(new_t_perm, new_t_var)
-        return t
+        return new_t
     elif isinstance(t, Unit): 
         new_t = Unit()
         return new_t
@@ -239,6 +241,7 @@ def fix_pnt2prb_lst(FPEqLst):
 
 # the function that unifies terms t and s
 def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
+    #colocar um deep copy na hora dos branchs... colocar um deepcopy na hora de chamar is_fresh_subs, na hora de chamar is_fresh tb
     #check_param(Delta, sigma, PrbLst, FPEqLst)
     if verb: 
         print_quad(Delta, sigma, PrbLst, FPEqLst, indent_lvl)
@@ -255,7 +258,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
         if isinstance(s, Suspended_variable) and (not is_var_in_term(s.var, t)):
             sigma1 = [(s.var, apply_perm(inverse_perm(s.perm), t))]
             sigma2 = sigma1 + sigma 
-            (Delta1, bool1) = is_fresh_subs(sigma1, Delta)
+            (Delta1, bool1) = is_fresh_subs(sigma1, copy.deepcopy(Delta))
             Delta2 = Delta1 + Delta
             PrbLst2 = apply_sub(sigma1, PrbLst1) + \
                         apply_sub(sigma1, fix_pnt2prb_lst(FPEqLst)) 
@@ -279,7 +282,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                 if not is_var_in_term(t.var, s): 
                     sigma1 = [(t.var, apply_perm(inverse_perm(t.perm), s))]
                     sigma2 = sigma1 + sigma 
-                    (Delta1, bool1) = is_fresh_subs(sigma1, Delta)
+                    (Delta1, bool1) = is_fresh_subs(sigma1, copy.deepcopy(Delta))
                     Delta2 = Delta1 + Delta
                     PrbLst2 = apply_sub(sigma1, PrbLst1) + \
                                 apply_sub(sigma1, fix_pnt2prb_lst(FPEqLst)) 
@@ -321,7 +324,7 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     PrbLst2 = [(t.body, s.body)] + PrbLst1
                     return unify(Delta, sigma, PrbLst2, FPEqLst, verb, indent_lvl)
                 elif isinstance(s, Abstraction) and (t.atom).name != (s.atom).name: 
-                    (Delta1, bool1) = is_fresh((t.atom).name, s.body)
+                    (Delta1, bool1) = is_fresh(copy.deepcopy((t.atom).name), s.body)
                     Delta2 = Delta1 + Delta 
                     PrbLst2 = [(t.body, apply_perm([((t.atom).name, \
                                 (s.atom).name)], s.body))] + PrbLst1
@@ -356,8 +359,8 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     PrbLst_branch1 = [((t.arg).term1, (s.arg).term1)] + \
                                      [((t.arg).term2, (s.arg).term2)] + \
                                      PrbLst1 
-                    sol1 = unify(Delta, sigma, PrbLst_branch1, FPEqLst, verb,
-                            new_indent_lvl) 
+                    sol1 = unify(copy.deepcopy(Delta), copy.deepcopy(sigma), copy.deepcopy(PrbLst_branch1), 
+				copy.deepcopy(FPEqLst), verb, new_indent_lvl) 
                     PrbLst_branch2 = [((t.arg).term1, (s.arg).term2)] + \
                                      [((t.arg).term2, (s.arg).term1)] + \
                                      PrbLst1 
@@ -366,7 +369,6 @@ def unify(Delta, sigma, PrbLst, FPEqLst, verb=False, indent_lvl=""):
                     return sol1 + sol2
             else: 
                 quit("term t is not really a term")
-
 
 # print a context 
 def print_context(Delta): 
